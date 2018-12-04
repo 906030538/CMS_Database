@@ -1,0 +1,173 @@
+<!DOCTYPE>
+<html>
+	<head>
+		<meta http-equiv="Content-Language" content="zh-cn" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="referrer" content="never">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+		<meta name="format-detection" content="telephone=no" />
+		<title>消息/News</title>
+		<script src="static/js/jquery.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="static/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="static/css/content.css" />
+	</head>
+	<body onhashchange="hashchange()">
+		<div class="header">
+			<img class="bar no" src="static/img/announce_titlebar.png" />
+			<a href="./"><img class="t x" src="static/img/popup_close.png" /></a>
+		</div>
+		<div class="main">
+			<div class="col announcements">
+				<!-- <ul class="common_tab t_pink">
+					<a href="#NMU" id="NMU" class="current"><span>全部</span></a>
+					<a href="#NEW" id="NEW"><span>通知</span></a>
+					<a href="#MNT" id="MNT"><span>维护</span></a>
+					<a href="#UPD" id="UPD"><span>更新</span></a>
+				</ul> -->
+				<ul id="announceList" class="announceTitle"></ul>
+			</div>
+		</div>
+		<div class="popup">
+			<div class="header">
+				<img class="bar no" src="static/img/announce_titlebar.png" />
+				<a href="javascript:close()"><img class="t x" src="static/img/popup_close.png" /></a>
+				<img class="bg bg_l no" src="static/img/announce_bg_l.png" />
+				<img class="bg bg_r no" src="static/img/announce_bg_r.png" />
+			</div>
+			<div class="pop_main">
+				<div class="head">
+					<span id="category">Loading</span>
+					<span id="innerDate">2/29</span>
+					<span id="title">笑容正在加载……</span>
+				</div>
+				<div id="content"></div>
+			</div>
+			<footer>
+				<a class="btn b_white" href="javascript:close()">返回/Back</a>
+				<div class="auth">
+					<p>Powered by Honoka Misaka, QQ:2361547758</p>
+					<a class="back_top bg_r" href="javascript:$('.popup').scrollTop(0)"><img src="static/img/global_home.png" /></a>
+				</div>
+			</footer>
+		</div>
+		<img id="Connecting" src="static/img/connecting.png">
+		<script>
+		var announcementData = [];
+		$("#Connecting").show()
+		Date.prototype.setOffset = function (fmt) {
+			this.setHours(this.getHours() - fmt);
+			return this;
+		}
+		Date.prototype.getMD = function (fmt) {
+			var M = this.getMonth() + 1;
+			var D = this.getDate();
+			return M + '/' + D;
+		}
+		Date.prototype.getShort = function (fmt) {
+			var M = this.getMonth() + 1;
+			var D = this.getDate();
+			var H = this.getHours();
+			if(H.toString().length < 2) H = "0" + H.toString()
+			var m = this.getMinutes();
+			if(m.toString().length < 2) m = "0" + m.toString()
+			return M + '/' + D + ' ' + H + ':' + m;
+		}
+		function showAnnounceList(target) {
+			var list = $("#announceList");
+			list.empty();
+			var now = new Date();
+			for(var id in announcementData){
+				var item = announcementData[id];
+				if(typeof item === "object"){
+					var modify = item.ModifyTime ? " title=\"最后被: " + item.ModifierName + "\n修改于: " + new Date(item.ModifyTime).getShort() + "\"" : "";
+					var announceInfo = $("<div class=\"announceInfo\"><span class=\"announceDate\"" + modify + ">" + new Date(item.CreationTime).getShort() + "</span></div>");
+					var tag = $("<span class=\"is-tag\"></span>");
+					if(false){
+						tag.addClass("is-next");
+						tag.text("热门")
+					}else if(now - new Date(item.CreationTime) < 86400000) { // 24hours
+						tag.addClass("is-today");
+						tag.text("新帖")
+					}else if(now - new Date(item.CreationTime) > 604800000) {// 7days
+						tag.addClass("is-old");
+						tag.text("过期")
+					}
+					announceInfo.prepend(tag);
+					var category = $("<span class=\"announceCategory\">" + item.CreatorName + "</span>")
+					announceInfo.prepend(category);
+					var li = $("<a href=\"#id=" + item.Id + "\"><div class=\"announceSubject\">" + item.Title + "</div></a>").prepend(announceInfo);
+					list.prepend(li);
+				}
+			}
+		}
+		function showArticle(articleId) {
+			if(!announcementData)return;
+			if(!articleId)articleId = announcementData[announcementData.length - 1].Id;
+			$.ajax({
+				type: 'get',
+				url: 'ajax.php?module=view&action=v&id=' + articleId,
+				async: true,
+				dataType: 'text',
+				success: function(res){
+					var data = JSON.parse(res);
+					$("#innerDate").text(new Date(data.CreationTime).getMD());
+					$("#title").html(data.Title);
+					$("#content").html(data.Content);
+					$(".popup").show()
+				},
+				error: function(req, info) {
+					$('#category').text('Not Found');
+					$("#innerDate").text(new Date(announcementData.__update).toLocaleString());
+					$("#title").text('找不到该文章');
+					$("#content").html("ID not found!<br />您所访问的文章不存在，可以尝试点击刷新按钮<br /><br />目前数据的时间是：" + new Date(announcementData.__update).toLocaleString());
+					$(".popup").show()
+				}
+			});
+		}
+		function select(target) {
+		// 	$(".common_tab").children().removeClass("current");
+		// 	$("#" + target).addClass("current");
+			showAnnounceList(target)
+		}
+		function hashchange(){
+			$("#Connecting").show();
+			var h = location.hash;
+			if(h.indexOf("#id=")==0){
+				var id = h.substring(4);
+				showArticle(id);
+			// }else if(h.substring(1,4) == "NMU" || h.substring(1,4) == "NEW" || h.substring(1,4) == "MNT" || h.substring(1,4) == "UPD"){
+			// 	select(h.substring(1,4));
+			}else{
+				close()
+			}
+			$("#Connecting").hide();
+		}
+		function update(){
+			$.ajax({
+				type: 'get',
+				url: 'ajax.php?module=view&action=list',
+				async: true,
+				dataType: 'text',
+				success: function(res){
+					var data = JSON.parse(res);
+					announcementData.__update = new Date().getTime();
+					for(var id in data){
+						var item = data[id]
+						announcementData[item.Id] = item;
+					}
+					select("NMU")
+					hashchange();
+				},
+				error: function(req, info) {
+					alert("Update fail\n更新announcements列表失败，请稍后重试")
+				}
+			});
+		}
+		function close(){
+			$(".popup").hide()
+			location.hash = ""
+		}
+		update();
+		</script>
+	</body>
+</html>

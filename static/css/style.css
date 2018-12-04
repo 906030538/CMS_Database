@@ -1,0 +1,248 @@
+
+body{
+	color:#5b5b5b;
+	background-color:#F7F7F7;/*WhiteSmoke*/
+	margin:0;
+	overflow:hidden;
+}
+img{
+	max-width:100%;
+}
+ul{
+	padding:0;
+	margin:0;
+}
+li{
+	list-style:none;
+}
+.header{
+	z-index: 2;
+	position: absolute;
+	width: 100%;
+	user-select: none;
+}
+.t{
+	z-index:9;
+	position:absolute;
+	top:0;
+	/*height:100%;*/
+}
+.x{
+	right:0;
+}
+.no{
+	pointer-events:none;
+}
+.bar{
+	width:100%;
+}
+.main a:link,.main a:hover,.main a:visited,.main a:active{
+	color:unset;
+	user-select:none;
+	text-decoration:none;
+}
+.col{
+	position:absolute;
+	top:0;
+	bottom:0;
+	margin: 7% 2% 2%;
+	overflow-y:scroll;
+	overflow-x:hidden;
+}
+/*
+.col::-webkit-scrollbar{
+	width: 1em;
+}
+.col::-webkit-scrollbar-thumb{
+	background: #fff;
+	border-radius: 1em;
+	box-shadow: -1px -1px 9px 0 red inset, 0 0 10px 1px orange;
+}
+.col::-webkit-scrollbar-track{
+	border-radius: 10px;
+	background-color: lightgrey;
+	box-shadow: 0 0 10px 0 grey inset;
+}*/
+.announcements{
+	right: 0;
+	left: 0;
+	padding: 1.5%;
+	border: 2px solid #fff;
+	height: unset;
+	box-shadow: 0 0 10px 1px tan, 0 0 0 2px tan, 0 0 10px 1px tan inset;
+	border-radius: 1em;
+}
+.announcements>.common_tab{
+	overflow-x: scroll;
+	display:-webkit-flex;
+	display: flex;
+	flex-flow: row nowrap;
+}
+.announcements>.common_tab::-webkit-scrollbar{
+	display:none;
+}
+.announcements>.common_tab>*{
+	flex-grow: 1;
+}
+.announcements>.common_tab>*{
+	cursor: pointer;
+}
+.announceTitle>*{
+	margin:10px 2px;
+	padding:6px;
+	display:-webkit-flex;
+	display:flex;
+	position: relative;
+	background:-webkit-linear-gradient(#FFF,#f8f2e6);
+	background:linear-gradient(#FFF,#f8f2e6);
+	background-color:#f8f2e6;
+	border:2px solid #fff;
+	border-radius:6px;
+	box-shadow:0 0 0 2px #c6a882, 0 0 5px #e1c08d inset;
+	cursor: pointer;
+}
+.announceTitle>*:after {
+	width: 22px;
+	height: 12px;
+	background-image: url("../img/announce_listicon.png");
+	position: absolute;
+	margin: auto;
+	top: 0;
+	bottom: 0;
+	right: 10px;
+	content: '';
+}
+.announceInfo {
+	width: 7em;
+	color: SaddleBrown;
+}
+.announceCategory{
+	display: inline-block;
+	color: RosyBrown;
+}
+.announceCategory.MNT{
+	color: red;
+}
+.announceCategory.UPD{
+	color: blue;
+}
+.is-tag{
+	display: inline-block;
+	color: #FFF;
+	font-weight: bold;
+	font-size: small;
+	padding: 2px 5px;
+	border-radius: 0.5em;
+}
+.is-today{
+	background: orange;
+}
+.is-next{
+	background: red;
+}
+.is-old{
+	background: grey;
+}
+.announceDate{
+	display:block;
+	text-align:center;
+}
+.popup{
+	z-index: 2;
+	position:absolute;
+	height:100%;
+	width:100%;
+	color:#5b5b5b;
+	background-color:#F7F7F7;
+	margin:0;
+	overflow:auto;
+	display:none;
+}
+.bg{
+	position:absolute;
+	z-index:-1;
+}
+.ct{
+	position:fixed;
+	bottom:30%;
+	z-index:1;
+	width:10%;
+}
+.bg_l{
+	left:0;
+}
+.bg_r{
+	right:0;
+}
+.pop_main{
+	padding:100px 10%;
+}
+.head{
+	z-index:2;
+	margin:2px;
+	padding:13px 10px 16px;
+	display:-webkit-flex;
+	display:flex;
+	position: relative;
+	/*text-align: left;*/
+	background:-webkit-linear-gradient(#FFF,#f8f2e6);
+	background:linear-gradient(#FFF,#f8f2e6);
+	background-color:#f8f2e6;
+	border:2px solid #fff;
+	border-radius:6px;
+	box-shadow:0 0 0 2px #c6a882, 0 0 5px #e1c08d inset;
+}
+#category{
+	width:116px;
+	height:24px;
+	font-size:16px;
+	line-height:24px;
+	text-align:center;
+	color:#fff;
+	position:absolute;
+	top:-14px;
+	left:-4px;
+	background:url("../img/announce_caption_base.png");
+}
+#title{
+	padding:2px 0 0 40px;
+	overflow:hidden;
+	font-size:18px;
+	-webkit-box-orient:vertical;
+	-webkit-line-clamp:2;
+}
+#innerDate{
+	margin:auto 15px;
+	display:block;
+	position:relative;
+	font-size:18px;
+	color:#a47122;
+}
+#content{
+	padding:0 0.2em;
+	margin-top:20px;
+	overflow:hidden;
+	font-size:18px;
+	line-height:1.7;
+	text-align:left;
+}
+#Connecting {
+	position: absolute;
+	user-select: none;
+	pointer-events: none;
+	right: 0;
+	bottom: 1.4em;
+}
+.auth{
+	position:fixed;
+	bottom:.3em;
+	right:1em;
+	text-align:right;
+	color:#CCC;
+	margin:0 10px;
+}
+.back_top{
+	width:20%;
+	position:absolute;
+	bottom:1.5em;
+}
